@@ -24,7 +24,6 @@ class Region(models.Model):
 
 class City(models.Model):
     region = models.ForeignKey(Region, on_delete=models.CASCADE)
-    city_image = models.ImageField(upload_to='city_image/')
     city_name = models.CharField(max_length=30)
 
     def __str__(self):
@@ -40,17 +39,21 @@ class District(models.Model):
 
 
 class Property(models.Model):
+
+
     CONDITION_CHOICES = (
         ('new', 'New'),
         ('good', 'Good'),
         ('needs_repair', 'Needs repair'),
     )
 
-    PROPERTY_TYPES = [
-        ('apartment', 'Apartment'),
-        ('house', 'House'),
-        ('land', 'Land'),
-    ]
+    PROPERTY_TYPES= (
+        ('apartment', 'Квартира'),
+        ('house', 'Дом'),
+        ('land', 'Участок'),
+        ('commercial', 'Коммерческая недвижимость'),
+    )
+
 
     title = models.CharField(max_length=255)
     description = models.TextField()  # многоязычность можно реализовать через django-parler или отдельные таблицы
@@ -101,3 +104,6 @@ class Review(models.Model):
 
     def __str__(self):
         return f"Review by {self.author.username} for {self.seller.username}"
+    
+    
+    
