@@ -33,7 +33,7 @@ class District(models.Model):
     district = models.CharField(max_length=30)
 
     def __str__(self):
-        return {self.district}
+        return self.district
 
 
 class Property(models.Model):
@@ -63,7 +63,7 @@ class Property(models.Model):
 
 
     def __str__(self):
-        return f"{self.title}, {self.city}"
+        return f'{self.title}, {self.city}'
 
 
 
@@ -84,4 +84,4 @@ class Review(models.Model):
     comment = models.TextField()
 
     def __str__(self):
-        return f"{self.author}, {self.seller}"
+        return f'{self.author}, {self.seller}'
