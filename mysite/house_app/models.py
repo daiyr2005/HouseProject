@@ -1,7 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import MinValueValidator, MaxValueValidator
-from django.db.models import CharField
 from phonenumber_field.modelfields import PhoneNumberField
 
 class UserProfile(AbstractUser):
@@ -35,12 +33,11 @@ class District(models.Model):
     district = models.CharField(max_length=30)
 
     def __str__(self):
-        return f"{self.district} - {self.city}"
+        return self.district
+
 
 
 class Property(models.Model):
-
-
     CONDITION_CHOICES = (
         ('new', 'New'),
         ('good', 'Good'),
@@ -74,7 +71,8 @@ class Property(models.Model):
 
 
     def __str__(self):
-        return f"{self.title} - {self.city}"
+        return f'{self.title}, {self.city}'
+
 
 
     def get_avg_rating(self):
@@ -103,7 +101,6 @@ class Review(models.Model):
     comment = models.TextField()
 
     def __str__(self):
-        return f"Review by {self.author.username} for {self.seller.username}"
+        return f'{self.author}, {self.seller}'
     
-    
-    
+
