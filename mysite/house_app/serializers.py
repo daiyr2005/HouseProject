@@ -55,15 +55,12 @@ class UserProfileListSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = ['id','photo','first_name', 'last_name', 'user_role']
 
-class UserProfileDetailSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserProfile
-        fields = '__all__'
+
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ['username', 'user_role']
+        fields = ['photo','username', ]
 
 
 
@@ -108,15 +105,24 @@ class PropertyListSerializer(serializers.ModelSerializer):
     def get_count_people(self, obj):
         return obj.get_count_people()
 
-class PropertySerializer(serializers.ModelSerializer):
+
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = ['rating']
+
+
+class PropertyDetailSerializer(serializers.ModelSerializer):
     image = PropertyImageSerializer(read_only=True)
     seller = UserProfileSerializer(read_only=True)
+    buyer = UserProfileSerializer(read_only=True)
     region = RegionSerializer(read_only=True)
     city = CitySerializer(read_only=True)
     district = DistrictSerializer(read_only=True)
     property_img = PropertyImageSerializer(many=True, read_only=True)
     avg_rating = serializers.FloatField(source='get_avg_rating', read_only=True)
     count_people = serializers.IntegerField(source='get_count_people', read_only=True)
+    review = ReviewSerializer(read_only=True)
 
     class Meta:
         model = Property
@@ -135,11 +141,10 @@ class PropertySerializer(serializers.ModelSerializer):
 
 
 
+
 class ReviewSerializer(serializers.ModelSerializer):
     author = UserProfileSerializer(read_only=True)
     seller = UserProfileSerializer(read_only=True)
-
-
 
     class Meta:
         model = Review
