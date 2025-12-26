@@ -53,14 +53,14 @@ class LoginSerializer(serializers.Serializer):
 class UserProfileListSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ['id','photo','first_name', 'last_name', 'user_role']
+        fields = ['id', 'first_name', 'last_name', 'user_role']
 
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ['photo','username', ]
+        fields = ['username']
 
 
 
@@ -97,7 +97,7 @@ class PropertyListSerializer(serializers.ModelSerializer):
     count_people = serializers.IntegerField(source='get_count_people', read_only=True)
     class Meta:
         model = Property
-        fields = ['image','city_name', 'price','property_type', 'rooms' , 'avg_rating', 'count_people' ]
+        fields = ['image','price','property_type', 'rooms' , 'avg_rating', 'count_people' ]
 
     def get_avg_rating(self, obj):
         return obj.get_avg_rating()

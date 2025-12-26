@@ -56,8 +56,8 @@ class Property(models.Model):
     description = models.TextField()  # многоязычность можно реализовать через django-parler или отдельные таблицы
     property_type = models.CharField(max_length=20, choices=PROPERTY_TYPES)
     region = models.ForeignKey(Region, on_delete=models.CASCADE)
-    city = models.ForeignKey(City, on_delete=models.CASCADE, related_name='property')
-    district = models.ForeignKey(District, on_delete=models.CASCADE)
+    city = models.ForeignKey(City, on_delete=models.CASCADE, null=True, blank=True)
+    district = models.ForeignKey(District, on_delete=models.CASCADE, null=True, blank=True)
     address = models.CharField(max_length=255)
     area = models.DecimalField(max_digits=10, decimal_places=2)
     price = models.DecimalField(max_digits=12, decimal_places=2)
