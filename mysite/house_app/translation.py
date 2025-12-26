@@ -22,7 +22,7 @@ class DistrictTranslationOptions(TranslationOptions):
 
 @register(Property)
 class PropertyTranslationOptions(TranslationOptions):
-    fields = ('district_name','street','condition','property_type', 'description', 'condition')
+    fields = ('address','condition','property_type', 'description', 'condition')
 
 
 @register(Review)

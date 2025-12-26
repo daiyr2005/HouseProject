@@ -1,9 +1,9 @@
 from rest_framework import serializers
-from .models import *
+from .models import (UserProfile, Review, Region, City, District, Property, PropertyImage)
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 
-class UserRegisterSerializer(serializers.ModelSerializer):
+class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = ('first_name', 'username','age',  'password',  'phone_number')
@@ -25,7 +25,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         }
 
 
-class UserLoginSerializer(serializers.Serializer):
+class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
 
@@ -139,13 +139,10 @@ class PropertyDetailSerializer(serializers.ModelSerializer):
     def get_count_people(self, obj):
         return obj.get_count_people()
 
-
-
-
-class ReviewSerializer(serializers.ModelSerializer):
+class ReviewListSerializer(serializers.ModelSerializer):
     author = UserProfileSerializer(read_only=True)
     seller = UserProfileSerializer(read_only=True)
 
     class Meta:
         model = Review
-        fields = [ 'author', 'seller', 'property', 'rating', 'comment']
+        fields =['author', 'seller', 'rating', 'comment']
