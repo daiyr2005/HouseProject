@@ -55,6 +55,8 @@ class UserProfileListSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = ['id', 'first_name', 'last_name', 'user_role']
 
+    def get_queryset(self):
+        return UserProfile.objects.all(id=self.request.user.id)
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -62,6 +64,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = ['username']
 
+    def get_queryset(self):
+        return UserProfile.objects.all(id=self.request.user.id)
 
 
 class RegionSerializer(serializers.ModelSerializer):
