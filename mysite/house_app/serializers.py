@@ -101,7 +101,7 @@ class PropertyListSerializer(serializers.ModelSerializer):
     count_people = serializers.IntegerField(source='get_count_people', read_only=True)
     class Meta:
         model = Property
-        fields = ['image','price','property_type', 'rooms' , 'avg_rating', 'count_people' ]
+        fields = ['image', 'title', 'floor', 'property_type', 'avg_rating', 'count_people' ]
 
     def get_avg_rating(self, obj):
         return obj.get_avg_rating()
