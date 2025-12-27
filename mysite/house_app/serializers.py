@@ -1,12 +1,12 @@
 from rest_framework import serializers
-from .models import *
+from .models import (UserProfile, Review, Region, City, District, Property, PropertyImage)
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
 
-class UserRegisterSerializer(serializers.ModelSerializer):
+class RegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ('first_name', 'username','age',  'password',  'phone_number')
+        fields = ('first_name', 'username', 'password',  'phone_number')
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
@@ -25,7 +25,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         }
 
 
-class UserLoginSerializer(serializers.Serializer):
+class LoginSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField(write_only=True)
 
@@ -53,25 +53,25 @@ class UserLoginSerializer(serializers.Serializer):
 class UserProfileListSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ['id','photo','first_name', 'last_name', 'user_role']
+        fields = ['id', 'first_name', 'last_name', 'role']
 
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
-        fields = ['photo','username', ]
+        fields = ['username']
 
 
 
 class RegionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Region
-        fields = [ 'region_name']
+        fields = [ 'id','region_name']
 
 
 class CitySerializer(serializers.ModelSerializer):
-    region = RegionSerializer(read_only=True)
+    region = RegionSerializer()
 
     class Meta:
         model = City
@@ -79,7 +79,7 @@ class CitySerializer(serializers.ModelSerializer):
 
 
 class DistrictSerializer(serializers.ModelSerializer):
-    city = CitySerializer(read_only=True)
+    # city = CitySerializer()
 
     class Meta:
         model = District
@@ -97,7 +97,7 @@ class PropertyListSerializer(serializers.ModelSerializer):
     count_people = serializers.IntegerField(source='get_count_people', read_only=True)
     class Meta:
         model = Property
-        fields = ['image','city_name', 'price','property_type', 'rooms' , 'avg_rating', 'count_people' ]
+        fields = ['image','price','property_type', 'rooms' , 'avg_rating', 'count_people' ]
 
     def get_avg_rating(self, obj):
         return obj.get_avg_rating()
@@ -113,12 +113,10 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 
 class PropertyDetailSerializer(serializers.ModelSerializer):
-    image = PropertyImageSerializer(read_only=True)
     seller = UserProfileSerializer(read_only=True)
     buyer = UserProfileSerializer(read_only=True)
-    region = RegionSerializer(read_only=True)
-    city = CitySerializer(read_only=True)
-    district = DistrictSerializer(read_only=True)
+    city = CitySerializer()
+    district = DistrictSerializer()
     property_img = PropertyImageSerializer(many=True, read_only=True)
     avg_rating = serializers.FloatField(source='get_avg_rating', read_only=True)
     count_people = serializers.IntegerField(source='get_count_people', read_only=True)
@@ -127,10 +125,10 @@ class PropertyDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Property
         fields = [
-            'id','image', 'title', 'description', 'property_type', 'region', 'city', 'district',
+            'id','property_img', 'title', 'description', 'property_type', 'region', 'city', 'district',
             'address', 'area', 'price', 'rooms', 'floor', 'total_floors',
-            'documents', 'seller', 'condition',
-            'avg_rating', 'count_people'
+            'documents', 'seller', 'condition','buyer',
+            'avg_rating', 'count_people', 'review'
         ]
 
     def get_avg_rating(self, obj):
@@ -139,13 +137,10 @@ class PropertyDetailSerializer(serializers.ModelSerializer):
     def get_count_people(self, obj):
         return obj.get_count_people()
 
-
-
-
-class ReviewSerializer(serializers.ModelSerializer):
+class ReviewListSerializer(serializers.ModelSerializer):
     author = UserProfileSerializer(read_only=True)
     seller = UserProfileSerializer(read_only=True)
 
     class Meta:
         model = Review
-        fields = [ 'author', 'seller', 'property', 'rating', 'comment']
+        fields =['author', 'seller', 'rating', 'comment']

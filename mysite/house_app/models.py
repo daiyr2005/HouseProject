@@ -21,15 +21,17 @@ class Region(models.Model):
         return self.region_name
 
 class City(models.Model):
-    region = models.ForeignKey(Region, on_delete=models.CASCADE)
     city_name = models.CharField(max_length=30)
+    region = models.ForeignKey(Region, on_delete=models.CASCADE, related_name="cities"
+)
+
 
     def __str__(self):
         return self.city_name
 
 
-class District(models.Model):
-    city = models.ForeignKey(Region, on_delete=models.CASCADE)
+class  District(models.Model):
+    city = models.ForeignKey(Region, on_delete=models.CASCADE, related_name="districts")
     district = models.CharField(max_length=30)
 
     def __str__(self):
@@ -56,8 +58,8 @@ class Property(models.Model):
     description = models.TextField()  # многоязычность можно реализовать через django-parler или отдельные таблицы
     property_type = models.CharField(max_length=20, choices=PROPERTY_TYPES)
     region = models.ForeignKey(Region, on_delete=models.CASCADE)
-    city = models.ForeignKey(City, on_delete=models.CASCADE, related_name='property')
-    district = models.ForeignKey(District, on_delete=models.CASCADE)
+    city = models.ForeignKey(City, on_delete=models.CASCADE,related_name="properties")
+    district = models.ForeignKey(District, on_delete=models.CASCADE, null=True, blank=True)
     address = models.CharField(max_length=255)
     area = models.DecimalField(max_digits=10, decimal_places=2)
     price = models.DecimalField(max_digits=12, decimal_places=2)
@@ -78,7 +80,7 @@ class Property(models.Model):
     def get_avg_rating(self):
         ratings = self.reviews.all()
         if ratings.exists():
-            return round(sum([i.stars for i in ratings ]) / ratings.count(), 1)
+            return round(sum([i.rating for i in ratings ]) / ratings.count(), 1)
         return 0
 
     def get_count_people(self):
