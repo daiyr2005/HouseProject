@@ -55,6 +55,8 @@ class UserProfileListSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = ['id', 'first_name', 'last_name', 'role']
 
+    def get_queryset(self):
+        return UserProfile.objects.all(id=self.request.user.id)
 
 
 class UserProfileSerializer(serializers.ModelSerializer):
@@ -62,6 +64,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = ['username']
 
+    def get_queryset(self):
+        return UserProfile.objects.all(id=self.request.user.id)
 
 
 class RegionSerializer(serializers.ModelSerializer):
@@ -97,7 +101,7 @@ class PropertyListSerializer(serializers.ModelSerializer):
     count_people = serializers.IntegerField(source='get_count_people', read_only=True)
     class Meta:
         model = Property
-        fields = ['image','price','property_type', 'rooms' , 'avg_rating', 'count_people' ]
+        fields = ['image', 'title', 'floor', 'property_type', 'avg_rating', 'count_people' ]
 
     def get_avg_rating(self, obj):
         return obj.get_avg_rating()
